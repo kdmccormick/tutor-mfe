@@ -17,3 +17,17 @@ CORS_ORIGIN_WHITELIST.append("http://{{ MFE_HOST }}:{{ app["port"] }}")
 LOGIN_REDIRECT_WHITELIST.append("{{ MFE_HOST }}:{{ app["port"] }}")
 CSRF_TRUSTED_ORIGINS.append("{{ MFE_HOST }}:{{ app["port"] }}")
 {% endfor %}
+
+{% if MFE_ENABLE_DYNAMIC_CONFIG %}
+{# TODO: Make sure the generated Python below is indented so that it is easier to read. #}
+
+{# TODO: Sometimes, in dev mode, MFEs fail to call the config API and retrieve these settings, because they try to authenticate with LMS first, which of course doesn't work because they haven't loaded their config yet. #}
+
+MFE_CONFIG = {{ MFE_ENV_COMMON['development'] }}
+
+MFE_CONFIG_OVERRIDES = {
+    {%- for app in iter_values_named(suffix="MFE_APP") %}
+	"{{ app["name"] }}": {{ app.get("env", {}) }},
+	{%- endfor %}
+}
+{% endif %}

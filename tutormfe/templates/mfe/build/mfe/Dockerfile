@@ -63,11 +63,15 @@ CMD ["npm", "run", "start"]
 ######## {{ app["name"] }} (production)
 FROM {{ app["name"] }}-dev AS {{ app["name"] }}
 COPY ./env/production /openedx/env/production
+{% if MFE_ENABLE_DYNAMIC_CONFIG %}
+RUN echo "APP_ID={{ app['name'] }}" >> /openedx/env/production.override
+{% else %}
 RUN touch /openedx/env/production.override \
   {%- for key, value in app.get("env", {}).get("production", {}).items() %}
   && echo "{{ key }}='{{ value }}'" >> /openedx/env/production.override \
   {%- endfor %}
   && echo "done setting production overrides"
+{% endif %}
 RUN bash -c "set -a && source /openedx/env/production && source /openedx/env/production.override && npm run build"
 
 {% endfor %}

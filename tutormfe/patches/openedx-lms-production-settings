@@ -14,3 +14,15 @@ PROFILE_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% en
 LOGIN_REDIRECT_WHITELIST.append("{{ MFE_HOST }}")
 CORS_ORIGIN_WHITELIST.append("{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}")
 CSRF_TRUSTED_ORIGINS.append("{{ MFE_HOST }}")
+
+{% if MFE_ENABLE_DYNAMIC_CONFIG %}
+{# TODO: Make sure the generated Python below is indented so that it is easier to read. #}
+
+MFE_CONFIG = {{ MFE_ENV_COMMON['production'] }}
+
+MFE_CONFIG_OVERRIDES = {
+    {%- for app in iter_values_named(suffix="MFE_APP") %}
+	"{{ app["name"] }}": {{ app.get("env", {}) }},
+	{%- endfor %}
+}
+{% endif %}
