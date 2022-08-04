@@ -6,6 +6,7 @@ from tutor import hooks as tutor_hooks
 
 from .__about__ import __version__
 
+
 config = {
     "defaults": {
         "VERSION": __version__,
@@ -13,6 +14,46 @@ config = {
         "HOST": "apps.{{ LMS_HOST }}",
         "COMMON_VERSION": "{{ OPENEDX_COMMON_VERSION }}",
         "CADDY_DOCKER_IMAGE": "{{ DOCKER_IMAGE_CADDY }}",
+        "ENABLE_DYNAMIC_CONFIG": True,
+        "ENV_COMMON": {
+            "production": {
+                "NODE_ENV": "production",
+                "ACCESS_TOKEN_COOKIE_NAME": "edx-jwt-cookie-header-payload",
+                "BASE_URL": "{{ MFE_HOST }}",
+                "CSRF_TOKEN_API_PATH": "/csrf/api/v1/token",
+                "CREDENTIALS_BASE_URL": "",
+                "DISCOVERY_API_BASE_URL": "{% if DISCOVERY_HOST is defined %}{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ DISCOVERY_HOST }}{% endif %}",
+                "ECOMMERCE_BASE_URL": "",
+                "ENABLE_NEW_RELIC": "false",
+                "FAVICON_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/favicon.ico",
+                "LANGUAGE_PREFERENCE_COOKIE_NAME": "openedx-language-preference",
+                "LMS_BASE_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}",
+                "LOGIN_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/login",
+                "LOGO_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/theming/asset/images/logo.png",
+                "LOGO_TRADEMARK_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/theming/asset/images/logo.png",
+                "LOGO_WHITE_URL": "",
+                "LOGOUT_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/logout",
+                "MARKETING_SITE_BASE_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}",
+                "PUBLISHER_BASE_URL": "",
+                "REFRESH_ACCESS_TOKEN_ENDPOINT": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/login_refresh",
+                "SEGMENT_KEY": "",
+                "SITE_NAME": "{{ PLATFORM_NAME|replace(\"'\", \"'\\''\")|replace(\" \", \"\\ \") }}",
+                "STUDIO_BASE_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ CMS_HOST }}",
+                "USER_INFO_COOKIE_NAME": "user-info",
+            },
+            "development": {
+                "NODE_ENV": "development",
+                "DISCOVERY_API_BASE_URL": "{% if DISCOVERY_HOST is defined %}http://{{ DISCOVERY_HOST }}:8381{% endif %}",
+                "LMS_BASE_URL": "http://{{ LMS_HOST }}:8000",
+                "LOGIN_URL": "http://{{ LMS_HOST }}:8000/login",
+                "LOGO_URL": "http://{{ LMS_HOST }}:8000/theming/asset/images/logo.png",
+                "LOGO_TRADEMARK_URL": "http://{{ LMS_HOST }}:8000/theming/asset/images/logo.png",
+                "LOGOUT_URL": "http://{{ LMS_HOST }}:8000/logout",
+                "MARKETING_SITE_BASE_URL": "http://{{ LMS_HOST }}:8000",
+                "REFRESH_ACCESS_TOKEN_ENDPOINT": "http://{{ LMS_HOST }}:8000/login_refresh",
+                "STUDIO_BASE_URL": "http://{{ CMS_HOST }}:8001",
+            },
+        },
         "ACCOUNT_MFE_APP": {
             "name": "account",
             "repository": "https://github.com/edx/frontend-app-account",

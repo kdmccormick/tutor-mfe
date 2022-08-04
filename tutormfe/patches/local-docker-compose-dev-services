@@ -15,6 +15,7 @@
         - ../plugins/mfe/build/mfe/env/production
         - ../plugins/mfe/build/mfe/env/development
     environment:
+        - "APP_ID={{ app['name'] }}"
         - "PORT={{ app['port'] }}"
         {%- for key, value in app.get("env", {}).get("production", {}).items() %}
         - "{{ key }}={{ value }}"

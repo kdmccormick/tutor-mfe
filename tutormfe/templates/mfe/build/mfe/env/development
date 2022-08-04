@@ -1,12 +1,17 @@
-DISCOVERY_API_BASE_URL={% if DISCOVERY_HOST is defined %}http://{{ DISCOVERY_HOST }}:8381{% endif %}
-LMS_BASE_URL=http://{{ LMS_HOST }}:8000
-LOGIN_URL=http://{{ LMS_HOST }}:8000/login
-LOGO_URL=http://{{ LMS_HOST }}:8000/theming/asset/images/logo.png
-LOGO_TRADEMARK_URL=http://{{ LMS_HOST }}:8000/theming/asset/images/logo.png
-LOGOUT_URL=http://{{ LMS_HOST }}:8000/logout
-MARKETING_SITE_BASE_URL=http://{{ LMS_HOST }}:8000
-NODE_ENV=development
-REFRESH_ACCESS_TOKEN_ENDPOINT=http://{{ LMS_HOST }}:8000/login_refresh
-STUDIO_BASE_URL=http://{{ CMS_HOST }}:8001
+{% if MFE_ENABLE_DYNAMIC_CONFIG %}
+
+{# TODO: Is it safe to assume that this is always the base URL when we're running in dev mode? #}
+MFE_CONFIG_API_URL=http://local.overhang.io:8000/api/mfe_config/v1
+
+{% else %}
+
+MFE_CONFIG_API_URL=
+
+{% for env_key, env_value in MFE_ENV_COMMON['development'].items() %}
+{# TODO: Will this break if env_value contains single quotes? #}
+{{ env_key }}='{{ env_value }}'
+{% endfor %}
+
+{% endif %}
 
 {{ patch("mfe-env-development") }}

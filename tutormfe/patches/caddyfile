@@ -1,4 +1,11 @@
 {{ MFE_HOST }}{$default_site_port} {
+	@mfe_config_api {
+		path /api/mfe_config/v1*
+		query mfe=*
+	}
+	# TODO: Can we save a round trip by making this a rewrite instead of a redirect?
+	redir @mfe_config_api //{{ LMS_HOST }}/api/mfe_config/v1?mfe={http.request.uri.query.mfe}
+
     respond / 204
     request_body {
         max_size 2MB
